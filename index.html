@@ -65,9 +65,10 @@
         </div>
 
         <div id="flashcard-section" class="flex-1 flex flex-col items-center justify-center py-4">
-            <div class="w-full max-w-lg perspective-1000 h-[380px] md:h-[430px] relative cursor-pointer group" id="flashcard-container">
+            <div class="w-full max-w-lg perspective-1000 h-[400px] md:h-[450px] relative cursor-pointer group" id="flashcard-container">
                 <div class="w-full h-full preserve-3d transition-transform duration-500 ease-out relative rounded-2xl shadow-xl border border-slate-200" id="flashcard-inner">
                     
+                    <!-- MẶT TRƯỚC -->
                     <div class="absolute inset-0 w-full h-full backface-hidden bg-white rounded-2xl flex flex-col p-6 justify-between border-b-4 border-indigo-500">
                         <div class="flex justify-between items-center">
                             <span class="text-xs font-semibold px-2.5 py-1 rounded" id="card-tag">Loading...</span>
@@ -86,23 +87,30 @@
                         </div>
                     </div>
 
+                    <!-- MẶT SAU -->
                     <div class="absolute inset-0 w-full h-full backface-hidden rotate-y-180 bg-slate-900 text-white rounded-2xl flex flex-col p-6 justify-between border-b-4 border-emerald-500">
                         <div class="flex justify-between items-center">
-                            <span class="text-xs font-semibold px-2.5 py-1 rounded bg-emerald-950 text-emerald-400">Định nghĩa & Đồng nghĩa</span>
+                            <span class="text-xs font-semibold px-2.5 py-1 rounded bg-emerald-950 text-emerald-400">Định nghĩa & Mở rộng</span>
                             <span class="text-xs text-slate-400">Mặt sau</span>
                         </div>
-                        <div class="my-auto overflow-y-auto max-h-[260px] md:max-h-[300px] pr-2 space-y-4">
+                        <div class="my-auto overflow-y-auto max-h-[280px] md:max-h-[320px] pr-2 space-y-4">
                             <div>
                                 <h3 class="text-xs uppercase tracking-wider text-emerald-400 font-bold mb-1">Giải nghĩa cốt lõi:</h3>
-                                <div id="card-meaning" class="text-base font-medium leading-relaxed text-slate-100 whitespace-pre-line text-slate-200">Meaning</div>
+                                <div id="card-meaning" class="text-base font-medium leading-relaxed text-slate-200 whitespace-pre-line">Meaning</div>
                             </div>
-                            <div>
-                                <h3 class="text-xs uppercase tracking-wider text-cyan-400 font-bold mb-1">Từ đồng nghĩa (Synonyms):</h3>
-                                <div id="card-synonyms" class="flex flex-wrap gap-1.5 mt-1.5"></div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                                <div>
+                                    <h3 class="text-xs uppercase tracking-wider text-cyan-400 font-bold mb-1">Từ đồng nghĩa (~):</h3>
+                                    <div id="card-synonyms" class="flex flex-wrap gap-1.5 mt-1"></div>
+                                </div>
+                                <div>
+                                    <h3 class="text-xs uppercase tracking-wider text-rose-400 font-bold mb-1">Từ trái nghĩa (#):</h3>
+                                    <div id="card-antonyms" class="flex flex-wrap gap-1.5 mt-1"></div>
+                                </div>
                             </div>
                         </div>
                         <div class="flex justify-between items-center text-xs text-slate-500 border-t border-slate-800 pt-4">
-                            <span class="flex items-center gap-1"><i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-500"></i> Kỳ thi Tốt nghiệp THPT</span>
+                            <span class="flex items-center gap-1"><i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-500"></i> Từ vựng nâng cao C1/C2</span>
                             <span>Nhấn để xoay lại</span>
                         </div>
                     </div>
@@ -137,10 +145,11 @@
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="border-b border-slate-200 bg-slate-50 text-slate-500 text-xs uppercase font-semibold">
-                                <th class="p-4 w-[240px]">Từ vựng</th>
+                                <th class="p-4 w-[220px]">Từ vựng</th>
                                 <th class="p-4">Ý nghĩa & Cách dùng</th>
-                                <th class="p-4">Đồng nghĩa</th>
-                                <th class="p-4 text-right w-[120px]">Trạng thái</th>
+                                <th class="p-4 w-[160px]">Đồng nghĩa (~)</th>
+                                <th class="p-4 w-[160px]">Trái nghĩa (#)</th>
+                                <th class="p-4 text-right w-[110px]">Trạng thái</th>
                             </tr>
                         </thead>
                         <tbody id="list-table-body" class="divide-y divide-slate-100 text-sm"></tbody>
@@ -152,161 +161,161 @@
     </main>
 
     <script>
-        // Cơ sở dữ liệu hợp nhất (Đã lọc trùng lặp giữa các bảng)
+        // Cơ sở dữ liệu mở rộng bổ sung cả Synonyms và Antonyms
         const vocabularyData = [
             // CYBERSECURITY
-            { id: 1, word: "vigilance", type: "n", ipa: "/ˈvɪdʒɪləns/", meaning: "Sự cảnh giác, sự thận trọng nghiêm ngặt đề phòng nguy hiểm.", synonyms: ["watchfulness", "alertness", "caution"], source: "cyber" },
-            { id: 2, word: "indifferent", type: "adj", ipa: "/ɪnˈdɪfrənt/", meaning: "Thờ ơ, dửng dưng, lãnh đạm (đi với TO). Tàm tạm, bình thường.", synonyms: ["apathetic", "unconcerned", "mediocre"], source: "cyber" },
-            { id: 3, word: "impulsively", type: "adv", ipa: "/ɪmˈpʌlsɪvli/", meaning: "Một cách bốc đồng, hấp tấp, làm theo bản năng bộc phát.", synonyms: ["spontaneously", "rashly", "hastily"], source: "cyber" },
-            { id: 4, word: "akin", type: "adj", ipa: "/əˈkɪn/", meaning: "Tương tự, giống như, chẳng khác nào (be akin TO).", synonyms: ["similar", "analogous", "comparable"], source: "cyber" },
-            { id: 5, word: "detrimental", type: "adj", ipa: "/ˌdetrɪˈmentl/", meaning: "Gây hại, bất lợi lớn (đi với TO).", synonyms: ["harmful", "damaging", "adverse"], source: "cyber" },
+            { id: 1, word: "vigilance", type: "n", ipa: "/ˈvɪdʒɪləns/", meaning: "Sự cảnh giác, sự thận trọng nghiêm ngặt đề phòng nguy hiểm.", synonyms: ["watchfulness", "alertness", "caution"], antonyms: ["negligence", "apathy", "carelessness"], source: "cyber" },
+            { id: 2, word: "indifferent", type: "adj", ipa: "/ɪnˈdɪfrənt/", meaning: "Thờ ơ, dửng dưng, lãnh đạm (đi với TO). Tàm tạm, bình thường.", synonyms: ["apathetic", "unconcerned", "mediocre"], antonyms: ["passionate", "caring", "enthusiastic"], source: "cyber" },
+            { id: 3, word: "impulsively", type: "adv", ipa: "/ɪmˈpʌlsɪvli/", meaning: "Một cách bốc đồng, hấp tấp, làm theo bản năng bộc phát.", synonyms: ["spontaneously", "rashly", "hastily"], antonyms: ["deliberately", "prudently", "cautiously"], source: "cyber" },
+            { id: 4, word: "akin", type: "adj", ipa: "/əˈkɪn/", meaning: "Tương tự, giống như, chẳng khác nào (be akin TO).", synonyms: ["similar", "analogous", "comparable"], antonyms: ["dissimilar", "disparate", "distinct"], source: "cyber" },
+            { id: 5, word: "detrimental", type: "adj", ipa: "/ˌdetrɪˈmentl/", meaning: "Gây hại, bất lợi lớn (đi với TO).", synonyms: ["harmful", "damaging", "adverse"], antonyms: ["beneficial", "advantageous", "salutary"], source: "cyber" },
             { id: 6, word: "instrumental", type: "adj", ipa: "/ˌɪnstrəˈmentl/", meaning: "Đóng vai trò quan trọng, là phương tiện quyết định (đi với IN).", synonyms: ["influential", "crucial", "vital"], source: "cyber" },
-            { id: 7, word: "monumental", type: "adj", ipa: "/ˌmɒnjuˈmentl/", meaning: "Vĩ đại, hoành tráng / cực kỳ lớn lao.", synonyms: ["huge", "massive", "colossal"], source: "cyber" },
-            { id: 8, word: "contemporary", type: "adj / n", ipa: "/kəmˈtemprəri/", meaning: "Đương đại, hiện đại. Người sống cùng thời, người cùng trang lứa.", synonyms: ["modern", "current", "peer", "coeval"], source: "cyber" },
-            { id: 9, word: "perilous", type: "adj", ipa: "/ˈperələs/", meaning: "Hiểm nghèo, đầy nguy hiểm, rủi ro cao.", synonyms: ["hazardous", "risky", "dangerous"], source: "cyber" },
-            { id: 10, word: "proliferation", type: "n", ipa: "/prəˌlɪfəˈreɪʃn/", meaning: "Sự bùng nổ, phát triển nhân rộng nhanh chóng.", synonyms: ["expansion", "explosion", "surge"], source: "cyber" },
-            { id: 11, word: "exponentially", type: "adv", ipa: "/ˌekspəˈnenʃəli/", meaning: "Theo cấp số nhân (tăng trưởng tốc độ cực nhanh).", synonyms: ["dramatically", "sharply", "rapidly"], source: "cyber" },
-            { id: 12, word: "agility", type: "n", ipa: "/əˈdʒɪləti/", meaning: "Sự nhanh nhẹn, linh hoạt thể chất. Sự nhạy bén, sắc sảo tư duy.", synonyms: ["nimbleness", "flexibility", "sharpness"], source: "cyber" },
-            { id: 13, word: "subject to", type: "phrase", ipa: "/ˈsʌbdʒɪkt tuː/", meaning: "Dễ bị tác động tiêu cực / Tuỳ thuộc vào điều kiện. Bắt ai gánh chịu điều tồi tệ.", synonyms: ["vulnerable to", "conditional on", "exposed to"], source: "cyber" },
-            { id: 14, word: "perimeter", type: "n", ipa: "/pəˈrɪmɪtə(r)/", meaning: "Vành đai bảo vệ, ranh giới bên ngoài, chu vi bảo mật.", synonyms: ["boundary", "border", "frontier"], source: "cyber" },
-            { id: 15, word: "robust", type: "adj", ipa: "/rəʊˈbʌst/", meaning: "Mạnh mẽ, kiên cố, vững chắc (hệ thống, sức khỏe).", synonyms: ["sturdy", "strong", "resilient"], source: "cyber" },
-            { id: 16, word: "encryption", type: "n", ipa: "/ɪnˈkrɪpʃn/", meaning: "Sự mã hóa dữ liệu bảo mật thông tin bí mật.", synonyms: ["encipherment", "coding"], source: "cyber" },
-            { id: 17, word: "futile", type: "adj", ipa: "/ˈfjuːtaɪl/", meaning: "Vô ích, công cốc, vô vọng hoàn toàn.", synonyms: ["useless", "vain", "pointless"], source: "cyber" },
-            { id: 18, word: "underscore", type: "v", ipa: "/ˌʌndəˈskɔː(r)/", meaning: "Nhấn mạnh, làm nổi bật tầm quan trọng cốt lõi.", synonyms: ["emphasize", "highlight", "stress"], source: "cyber" },
-            { id: 19, word: "holistic", type: "adj", ipa: "/həʊˈlɪstɪk/", meaning: "Toàn diện, tổng thể (xem xét dựa trên mọi khía cạnh).", synonyms: ["comprehensive", "all-inclusive", "integrated"], source: "cyber" },
-            { id: 20, word: "resilience", type: "n", ipa: "/rɪˈzɪliəns/", meaning: "Khả năng phục hồi, sự kiên cường bật dậy sau khủng hoảng.", synonyms: ["toughness", "adaptability", "buoyancy"], source: "cyber" },
-            { id: 21, word: "fortification", type: "n", ipa: "/ˌfɔːtɪfɪˈkeɪʃn/", meaning: "Sự củng cố, làm cho kiên cố, vững chắc.", synonyms: ["strengthening", "reinforcement"], source: "cyber" },
-            { id: 22, word: "irrevocable", type: "adj", ipa: "/ɪˈrevəkəbl/", meaning: "Không thể đảo ngược, không thể thu hồi hay sửa chữa đổi thay.", synonyms: ["irreversible", "unalterable", "final"], source: "cyber" },
-            { id: 23, word: "compliance", type: "n", ipa: "/kəmˈplaɪəns/", meaning: "Sự tuân thủ (quy định, pháp luật - đi với WITH).", synonyms: ["adherence", "conformity", "obedience"], source: "cyber" },
-            { id: 24, word: "enterprise", type: "n", ipa: "/ˈentəpraɪz/", meaning: "Doanh nghiệp lớn. Tinh thần dám nghĩ dám làm, sẵn sàng mạo hiểm.", synonyms: ["corporation", "venture", "initiative"], source: "cyber" },
-            { id: 25, word: "negligent", type: "adj", ipa: "/ˈneɡlɪdʒənt/", meaning: "Cẩu thả, lơ là, chểnh mảng thiếu trách nhiệm.", synonyms: ["careless", "remiss", "lax"], source: "cyber" },
-            { id: 26, word: "inherent", type: "adj", ipa: "/ɪnˈhɪərənt/", meaning: "Vốn có, cố hữu, gắn liền từ bản chất bên trong.", synonyms: ["intrinsic", "innate", "essential"], source: "cyber" },
-            { id: 27, word: "inadvertently", type: "adv", ipa: "/ˌɪnədˈvɜːtəntli/", meaning: "Vô tình, không cố ý, sơ suất lơ là.", synonyms: ["unintentionally", "accidentally", "unwittingly"], source: "cyber" },
-            { id: 28, word: "compromise", type: "v", ipa: "/ˈkɒmprəmaɪz/", meaning: "Làm tổn hại hệ thống/uy tín. Thỏa hiệp, nhường bộ.", synonyms: ["endanger", "jeopardize", "undermine"], source: "cyber" },
-            { id: 29, word: "stark", type: "adj", ipa: "/stɑːk/", meaning: "Rõ rệt, rành rành, trần trụi khốc liệt.", synonyms: ["blunt", "harsh", "clear", "vivid"], source: "cyber" },
-            { id: 30, word: "precarious", type: "adj", ipa: "/prɪˈkeəriəs/", meaning: "Bấp bênh, hiểm nghèo, không ổn định dễ đổ vỡ.", synonyms: ["unstable", "insecure", "risky"], source: "cyber" },
-            { id: 31, word: "substantial", type: "adj", ipa: "/səbˈstænʃl/", meaning: "Đáng kể, lớn lao, có giá trị quan trọng vững chắc.", synonyms: ["significant", "considerable", "sizable"], source: "cyber" },
-            { id: 32, word: "proprietary", type: "adj", ipa: "/prəˈpraɪətri/", meaning: "Độc quyền, thuộc quyền sở hữu riêng tư.", synonyms: ["patented", "exclusive"], source: "cyber" },
-            { id: 33, word: "integrity", type: "n", ipa: "/ɪnˈteɡrəti/", meaning: "Sự chính trực. Tính toàn vẹn, nguyên vẹn không bị sứt mẻ.", synonyms: ["honesty", "morality", "wholeness"], source: "cyber" },
-            { id: 34, word: "substantiate", type: "v", ipa: "/səbˈstænʃieɪt/", meaning: "Chứng minh, làm cho có căn cứ vững chắc.", synonyms: ["verify", "prove", "authenticate"], source: "cyber" },
-            { id: 35, word: "integrated", type: "adj", ipa: "/ˈɪntɪɡreɪtɪd/", meaning: "Tích hợp, hợp nhất, đồng bộ nhất quán.", synonyms: ["combined", "unified", "interconnected"], source: "cyber" },
+            { id: 7, word: "monumental", type: "adj", ipa: "/ˌmɒnjuˈmentl/", meaning: "Vĩ đại, hoành tráng / cực kỳ lớn lao.", synonyms: ["huge", "massive", "colossal"], antonyms: ["insignificant", "trivial", "puny"], source: "cyber" },
+            { id: 8, word: "contemporary", type: "adj / n", ipa: "/kəmˈtemprəri/", meaning: "Đương đại, hiện đại. Người sống cùng thời, người cùng trang lứa.", synonyms: ["modern", "current", "peer"], antonyms: ["ancient", "antique", "predecessor"], source: "cyber" },
+            { id: 9, word: "perilous", type: "adj", ipa: "/ˈperələs/", meaning: "Hiểm nghèo, đầy nguy hiểm, rủi ro cao.", synonyms: ["hazardous", "risky", "dangerous"], antonyms: ["safe", "secure", "harmless"], source: "cyber" },
+            { id: 10, word: "proliferation", type: "n", ipa: "/prəˌlɪfəˈreɪʃn/", meaning: "Sự bùng nổ, phát triển nhân rộng nhanh chóng.", synonyms: ["expansion", "explosion", "surge"], antonyms: ["reduction", "decline", "stagnation"], source: "cyber" },
+            { id: 11, word: "exponentially", type: "adv", ipa: "/ˌekspəˈnenʃəli/", meaning: "Theo cấp số nhân (tăng trưởng tốc độ cực nhanh).", synonyms: ["dramatically", "sharply", "rapidly"], antonyms: ["sluggishly", "linearly", "gradually"], source: "cyber" },
+            { id: 12, word: "agility", type: "n", ipa: "/əˈdʒɪləti/", meaning: "Sự nhanh nhẹn, linh hoạt thể chất. Sự nhạy bén, sắc sảo tư duy.", synonyms: ["nimbleness", "flexibility", "sharpness"], antonyms: ["sluggishness", "rigidity", "lethargy"], source: "cyber" },
+            { id: 13, word: "subject to", type: "phrase", ipa: "/ˈsʌbdʒɪkt tuː/", meaning: "Dễ bị tác động tiêu cực / Tuỳ thuộc vào điều kiện.", synonyms: ["vulnerable to", "exposed to", "conditional on"], antonyms: ["exempt from", "immune to", "unconditional"], source: "cyber" },
+            { id: 14, word: "perimeter", type: "n", ipa: "/pəˈrɪmɪtə(r)/", meaning: "Vành đai bảo vệ, ranh giới bên ngoài, chu vi bảo mật.", synonyms: ["boundary", "border", "frontier"], antonyms: ["center", "core", "interior"], source: "cyber" },
+            { id: 15, word: "robust", type: "adj", ipa: "/rəʊˈbʌst/", meaning: "Mạnh mẽ, kiên cố, vững chắc (hệ thống, sức khỏe).", synonyms: ["sturdy", "strong", "resilient"], antonyms: ["fragile", "feeble", "flimsy"], source: "cyber" },
+            { id: 16, word: "encryption", type: "n", ipa: "/ɪnˈkrịpsn/", meaning: "Sự mã hóa dữ liệu bảo mật thông tin bí mật.", synonyms: ["encipherment", "coding", "cryptography"], antonyms: ["decryption", "decoding", "plaintext"], source: "cyber" },
+            { id: 17, word: "futile", type: "adj", ipa: "/ˈfjuːtaɪl/", meaning: "Vô ích, công cốc, vô vọng hoàn toàn.", synonyms: ["useless", "vain", "pointless"], antonyms: ["effective", "fruitful", "productive"], source: "cyber" },
+            { id: 18, word: "underscore", type: "v", ipa: "/ˌʌndəˈskɔː(r)/", meaning: "Nhấn mạnh, làm nổi bật tầm quan trọng cốt lõi.", synonyms: ["emphasize", "highlight", "stress"], antonyms: ["downplay", "ignore", "understate"], source: "cyber" },
+            { id: 19, word: "holistic", type: "adj", ipa: "/həʊˈlɪstɪk/", meaning: "Toàn diện, tổng thể (xem xét dựa trên mọi khía cạnh).", synonyms: ["comprehensive", "all-inclusive", "integrated"], antonyms: ["fragmented", "partial", "sectional"], source: "cyber" },
+            { id: 20, word: "resilience", type: "n", ipa: "/rɪˈzɪliəns/", meaning: "Khả năng phục hồi, sự kiên cường bật dậy sau khủng hoảng.", synonyms: ["toughness", "adaptability", "buoyancy"], antonyms: ["fragility", "vulnerability", "weakness"], source: "cyber" },
+            { id: 21, word: "fortification", type: "n", ipa: "/ˌfɔːtɪfɪˈkeɪʃn/", meaning: "Sự củng cố, làm cho kiên cố, vững chắc.", synonyms: ["strengthening", "reinforcement", "defense"], antonyms: ["weakening", "debilitation", "undermining"], source: "cyber" },
+            { id: 22, word: "irrevocable", type: "adj", ipa: "/ɪˈrevəkəbl/", meaning: "Không thể đảo ngược, không thể thu hồi hay sửa chữa đổi thay.", synonyms: ["irreversible", "unalterable", "final"], antonyms: ["reversible", "alterable", "temporary"], source: "cyber" },
+            { id: 23, word: "compliance", type: "n", ipa: "/kəmˈplaɪəns/", meaning: "Sự tuân thủ (quy định, pháp luật - đi với WITH).", synonyms: ["adherence", "conformity", "obedience"], antonyms: ["defiance", "violation", "noncompliance"], source: "cyber" },
+            { id: 24, word: "enterprise", type: "n", ipa: "/ˈentəpraɪz/", meaning: "Doanh nghiệp lớn. Tinh thần dám nghĩ dám làm, sẵn sàng mạo hiểm.", synonyms: ["corporation", "venture", "initiative"], antonyms: ["idleness", "lethargy", "inactivity"], source: "cyber" },
+            { id: 25, word: "negligent", type: "adj", ipa: "/ˈneɡlɪdʒənt/", meaning: "Cẩu thả, lơ là, chểnh mảng thiếu trách nhiệm.", synonyms: ["careless", "remiss", "lax"], antonyms: ["attentive", "conscientious", "careful"], source: "cyber" },
+            { id: 26, word: "inherent", type: "adj", ipa: "/ɪnˈhɪərənt/", meaning: "Vốn có, cố hữu, gắn liền từ bản chất bên trong.", synonyms: ["intrinsic", "innate", "essential"], antonyms: ["extrinsic", "acquired", "incidental"], source: "cyber" },
+            { id: 27, word: "inadvertently", type: "adv", ipa: "/ˌɪnədˈvɜːtəntli/", meaning: "Vô tình, không cố ý, sơ suất lơ là.", synonyms: ["unintentionally", "accidentally", "unwittingly"], antonyms: ["deliberately", "intentionally", "purposely"], source: "cyber" },
+            { id: 28, word: "compromise", type: "v", ipa: "/ˈkɒmprəmaɪz/", meaning: "Làm tổn hại hệ thống/uy tín. Thỏa hiệp, nhường bộ.", synonyms: ["endanger", "jeopardize", "undermine"], antonyms: ["protect", "enhance", "strengthen"], source: "cyber" },
+            { id: 29, word: "stark", type: "adj", ipa: "/stɑːk/", meaning: "Rõ rệt, rành rành, trần trụi khốc liệt.", synonyms: ["blunt", "harsh", "clear", "vivid"], antonyms: ["fuzzy", "mild", "indistinct"], source: "cyber" },
+            { id: 30, word: "precarious", type: "adj", ipa: "/prɪˈkeəriəs/", meaning: "Bấp bênh, hiểm nghèo, không ổn định dễ đổ vỡ.", synonyms: ["unstable", "insecure", "risky"], antonyms: ["stable", "secure", "certain"], source: "cyber" },
+            { id: 31, word: "substantial", type: "adj", ipa: "/səbˈstænʃl/", meaning: "Đáng kể, lớn lao, có giá trị quan trọng vững chắc.", synonyms: ["significant", "considerable", "sizable"], antonyms: ["insignificant", "minor", "negligible"], source: "cyber" },
+            { id: 32, word: "proprietary", type: "adj", ipa: "/prəˈpraɪətri/", meaning: "Độc quyền, thuộc quyền sở hữu riêng tư.", synonyms: ["patented", "exclusive", "owned"], antonyms: ["public", "generic", "open-source"], source: "cyber" },
+            { id: 33, word: "integrity", type: "n", ipa: "/ɪnˈteɡrəti/", meaning: "Sự chính trực. Tính toàn vẹn, nguyên vẹn không bị sứt mẻ.", synonyms: ["honesty", "morality", "wholeness"], antonyms: ["corruption", "deceit", "fragmentation"], source: "cyber" },
+            { id: 34, word: "substantiate", type: "v", ipa: "/səbˈstænʃieɪt/", meaning: "Chứng minh, làm cho có căn cứ vững chắc.", synonyms: ["verify", "prove", "authenticate"], antonyms: ["disprove", "refute", "contradict"], source: "cyber" },
+            { id: 35, word: "integrated", type: "adj", ipa: "/ˈɪntɪɡreɪtɪd/", meaning: "Tích hợp, hợp nhất, đồng bộ nhất quán.", synonyms: ["combined", "unified", "interconnected"], antonyms: ["separated", "isolated", "disconnected"], source: "cyber" },
 
             // CULTURE & EDUCATION
-            { id: 36, word: "assimilate", type: "v", ipa: "/əˈsɪməleɪt/", meaning: "Đồng hóa văn hóa / Tiếp thu triệt để tri thức giáo dục.", synonyms: ["integrate", "absorb", "incorporate"], source: "culture" },
-            { id: 37, word: "indigenous", type: "adj", ipa: "/ɪnˈdɪdʒənəs/", meaning: "Bản địa, thuộc về nguồn gốc xuất xứ lâu đời tại vùng đất.", synonyms: ["native", "aboriginal", "local"], source: "culture" },
-            { id: 38, word: "pedagogy", type: "n", ipa: "/ˈpedəɡɒdʒi/", meaning: "Khoa học giáo dục, phương pháp luận sư phạm giảng dạy.", synonyms: ["teaching methods", "education strategies"], source: "culture" },
-            { id: 39, word: "cognitive", type: "adj", ipa: "/ˈkɒɡnətɪv/", meaning: "Thuộc về nhận thức, quá trình tư duy não bộ.", synonyms: ["mental", "intellectual"], source: "culture" },
-            { id: 40, word: "homogenize", type: "v", ipa: "/həˈmɒdʒənaɪz/", meaning: "Đồng nhất hóa, làm cho giống hệt nhau mất đi tính đa dạng.", synonyms: ["standardize", "uniformity"], source: "culture" },
-            { id: 41, word: "marginalize", type: "v", ipa: "/ˌmɑːdʒɪnəlaɪz/", meaning: "Gạt ra ngoài lề, đẩy vào vị thế yếu thế bị cô lập.", synonyms: ["isolate", "neglect", "sidelight"], source: "culture" },
-            { id: 42, word: "curriculum", type: "n", ipa: "/kəˈrɪkjələm/", meaning: "Khung chương trình giảng dạy đào tạo chính thức tại trường học.", synonyms: ["syllabus", "course of study"], source: "culture" },
-            { id: 43, word: "foster", type: "v", ipa: "/ˈfɒstə(r)/", meaning: "Nuôi dưỡng, thúc đẩy, tạo điều kiện phát triển.", synonyms: ["encourage", "nurture", "promote"], source: "culture" },
+            { id: 36, word: "assimilate", type: "v", ipa: "/əˈsɪməleɪt/", meaning: "Đồng hóa văn hóa / Tiếp thu triệt để tri thức giáo dục.", synonyms: ["integrate", "absorb", "incorporate"], antonyms: ["segregate", "reject", "exclude"], source: "culture" },
+            { id: 37, word: "indigenous", type: "adj", ipa: "/ɪnˈdɪdʒənəs/", meaning: "Bản địa, thuộc về nguồn gốc xuất xứ lâu đời tại vùng đất.", synonyms: ["native", "aboriginal", "local"], antonyms: ["exotic", "foreign", "immigrant"], source: "culture" },
+            { id: 38, word: "pedagogy", type: "n", ipa: "/ˈpedəɡɒdʒi/", meaning: "Khoa học giáo dục, phương pháp luận sư phạm giảng dạy.", synonyms: ["teaching methods", "education strategies"], antonyms: ["uneducated practice", "destruction"], source: "culture" },
+            { id: 39, word: "cognitive", type: "adj", ipa: "/ˈkɒɡnətɪv/", meaning: "Thuộc về nhận thức, quá trình tư duy não bộ.", synonyms: ["mental", "intellectual"], antonyms: ["physical", "emotional"], source: "culture" },
+            { id: 40, word: "homogenize", type: "v", ipa: "/həˈmɒdʒənaɪz/", meaning: "Đồng nhất hóa, làm cho giống hệt nhau mất đi tính đa dạng.", synonyms: ["standardize", "uniformity"], antonyms: ["diversify", "vary", "mix"], source: "culture" },
+            { id: 41, word: "marginalize", type: "v", ipa: "/ˌmɑːdʒɪnəlaɪz/", meaning: "Gạt ra ngoài lề, đẩy vào vị thế yếu thế bị cô lập.", synonyms: ["isolate", "neglect", "sidelight"], antonyms: ["empower", "integrate", "prioritize"], source: "culture" },
+            { id: 42, word: "curriculum", type: "n", ipa: "/kəˈrɪkjələm/", meaning: "Khung chương trình giảng dạy đào tạo chính thức tại trường học.", synonyms: ["syllabus", "course of study"], antonyms: ["extracurricular", "disorganization"], source: "culture" },
+            { id: 43, word: "foster", type: "v", ipa: "/ˈfɒstə(r)/", meaning: "Nuôi dưỡng, thúc đẩy, tạo điều kiện phát triển.", synonyms: ["encourage", "nurture", "promote"], antonyms: ["stifle", "suppress", "hinder"], source: "culture" },
 
             // OVERTOURISM & URBAN RENEWAL
-            { id: 44, word: "animosity", type: "n", ipa: "/ˌænɪˈmɒsəti/", meaning: "Sự thù hằn, oán hận ngấm ngầm bộc phát.", synonyms: ["hostility", "antagonism", "enmity"], source: "overtourism" },
-            { id: 45, word: "saturation", type: "n", ipa: "/ˌsætʃəˈreɪʃn/", meaning: "Trạng thái bão hòa, ngập tràn quá tải trầm trọng.", synonyms: ["overload", "surfeit", "engorgement"], source: "overtourism" },
-            { id: 46, word: "stringent", type: "adj", ipa: "/ˈstrɪndʒənt/", meaning: "Nghiêm ngặt, khắt khe về mặt quy định chính sách hành chính.", synonyms: ["strict", "rigorous", "tight"], source: "overtourism" },
-            { id: 47, word: "gentrification", type: "n", ipa: "/ˌdʒen.trɪ.fɪˈkeɪ.ʃən/", meaning: "Sự chỉnh trang/quý tộc hóa đô thị (đẩy người nghèo đi nơi khác).", synonyms: ["urban renewal", "redevelopment"], source: "overtourism" },
-            { id: 48, word: "confrontation", type: "n", ipa: "/ˌkɒnfrʌnˈteɪʃn/", meaning: "Sự đối đầu trực tiếp, cuộc đụng độ căng thẳng.", synonyms: ["clash", "conflict", "showdown"], source: "overtourism" },
-            { id: 49, word: "boon", type: "n", ipa: "/buːn/", meaning: "Lợi ích lớn lao, mối lợi mang lại cơ hội phát triển.", synonyms: ["benefit", "blessing", "godsend"], source: "overtourism" },
-            { id: 50, word: "vanishing", type: "adj", ipa: "/ˈvænɪʃɪŋ/", meaning: "Đang biến mất dần, tiêu tan đi mất (bản sắc văn hóa).", synonyms: ["disappearing", "fading", "evaporating"], source: "overtourism" },
-            { id: 51, word: "transients", type: "n", ipa: "/ˈtrænziənts/", meaning: "Khách vãng lai, người cư trú tạm thời ngắn hạn.", synonyms: ["drifters", "wanderers", "nomads"], source: "overtourism" },
-            { id: 52, word: "congestion", type: "n", ipa: "/kənˈdʒestʃən/", meaning: "Sự tắc nghẽn, dồn ứ (giao thông hoặc đô thị).", synonyms: ["overcrowding", "blockage"], source: "overtourism" },
-            { id: 53, word: "chokepoint", type: "n", ipa: "/ˈtʃəʊk pɔɪnt/", meaning: "Điểm nghẽn hẹp, nút thắt cổ chai chiến lược.", synonyms: ["bottleneck", "narrow pass"], source: "overtourism" },
-            { id: 54, word: "civic", type: "adj", ipa: "/ˈsɪvɪk/", meaning: "Thuộc về công dân, mang tính nghĩa vụ cộng đồng đô thị.", synonyms: ["public", "communal"], source: "overtourism" },
-            { id: 55, word: "municipal", type: "adj", ipa: "/mjuːˈnɪsɪpl/", meaning: "Thuộc về chính quyền địa phương, đô thị tự trị.", synonyms: ["urban", "local government"], source: "overtourism" },
-            { id: 56, word: "exclusionary", type: "adj", ipa: "/ɪkˈskluːʒənəri/", meaning: "Mang tính loại trừ, khép kín, ngăn chặn tiếp cận.", synonyms: ["elitist", "restrictive", "closed"], source: "overtourism" },
-            { id: 57, word: "monopolize", type: "v", ipa: "/məˈnɒpəlaɪz/", meaning: "Độc chiếm, thu tóm toàn bộ thị trường/không gian.", synonyms: ["dominate", "corner", "control"], source: "overtourism" },
-            { id: 58, word: "lucrative", type: "adj", ipa: "/ˈluːkrətɪv/", meaning: "Rất sinh lời, đẻ ra nhiều tiền lợi nhuận.", synonyms: ["profitable", "money-making"], source: "overtourism" },
-            { id: 59, word: "resentment", type: "n", ipa: "/rɪˈzentmənt/", meaning: "Sự uất hận, phẫn nộ tức tối vì bị đối xử bất công.", synonyms: ["bitterness", "anger", "indignation"], source: "overtourism" },
-            { id: 60, word: "hollowed-out", type: "adj", ipa: "/ˌhɒləʊd ˈaʊt/", meaning: "Bị đục rỗng hoàn toàn, chỉ còn vỏ bọc hào nhoáng.", synonyms: ["emptied", "gutted", "eroded"], source: "overtourism" },
+            { id: 44, word: "animosity", type: "n", ipa: "/ˌænɪˈmɒsəti/", meaning: "Sự thù hằn, oán hận ngấm ngầm bộc phát.", synonyms: ["hostility", "antagonism", "enmity"], antonyms: ["goodwill", "friendliness", "amity"], source: "overtourism" },
+            { id: 45, word: "saturation", type: "n", ipa: "/ˌsætʃəˈreɪʃn/", meaning: "Trạng thái bão hòa, ngập tràn quá tải trầm trọng.", synonyms: ["overload", "surfeit", "engorgement"], antonyms: ["scarcity", "deficiency", "emptiness"], source: "overtourism" },
+            { id: 46, word: "stringent", type: "adj", ipa: "/ˈstrɪndʒənt/", meaning: "Nghiêm ngặt, khắt khe về mặt quy định chính sách hành chính.", synonyms: ["strict", "rigorous", "tight"], antonyms: ["lax", "lenient", "flexible"], source: "overtourism" },
+            { id: 47, word: "gentrification", type: "n", ipa: "/ˌdʒen.trɪ.fɪˈkeɪ.ʃən/", meaning: "Sự chỉnh trang/quý tộc hóa đô thị (đẩy người nghèo đi nơi khác).", synonyms: ["urban renewal", "redevelopment"], antonyms: ["urban decay", "slumming"], source: "overtourism" },
+            { id: 48, word: "confrontation", type: "n", ipa: "/ˌkɒnfrʌnˈteɪʃn/", meaning: "Sự đối đầu trực tiếp, cuộc đụng độ căng thẳng.", synonyms: ["clash", "conflict", "showdown"], antonyms: ["compromise", "concord", "harmony"], source: "overtourism" },
+            { id: 49, word: "boon", type: "n", ipa: "/buːn/", meaning: "Lợi ích lớn lao, mối lợi mang lại cơ hội phát triển.", synonyms: ["benefit", "blessing", "godsend"], antonyms: ["bane", "curse", "disaster"], source: "overtourism" },
+            { id: 50, word: "vanishing", type: "adj", ipa: "/ˈvænɪʃɪŋ/", meaning: "Đang biến mất dần, tiêu tan đi mất (bản sắc văn hóa).", synonyms: ["disappearing", "fading", "evaporating"], antonyms: ["appearing", "emerging", "enduring"], source: "overtourism" },
+            { id: 51, word: "transients", type: "n", ipa: "/ˈtrænziənts/", meaning: "Khách vãng lai, người cư trú tạm thời ngắn hạn.", synonyms: ["drifters", "wanderers", "nomads"], antonyms: ["residents", "inhabitants", "natives"], source: "overtourism" },
+            { id: 52, word: "congestion", type: "n", ipa: "/kənˈdʒestʃən/", meaning: "Sự tắc nghẽn, dồn ứ (giao thông hoặc đô thị).", synonyms: ["overcrowding", "blockage"], antonyms: ["clearance", "emptiness", "free flow"], source: "overtourism" },
+            { id: 53, word: "chokepoint", type: "n", ipa: "/ˈtʃəʊk pɔɪnt/", meaning: "Điểm nghẽn hẹp, nút thắt cổ chai chiến lược.", synonyms: ["bottleneck", "narrow pass"], antonyms: ["thoroughfare", "open space"], source: "overtourism" },
+            { id: 54, word: "civic", type: "adj", ipa: "/ˈsɪvɪk/", meaning: "Thuộc về công dân, mang tính nghĩa vụ cộng đồng đô thị.", synonyms: ["public", "communal"], antonyms: ["private", "individual", "personal"], source: "overtourism" },
+            { id: 55, word: "municipal", type: "adj", ipa: "/mjuːˈnɪsɪpl/", meaning: "Thuộc về chính quyền địa phương, đô thị tự trị.", synonyms: ["urban", "local government"], antonyms: ["national", "global", "federal"], source: "overtourism" },
+            { id: 56, word: "exclusionary", type: "adj", ipa: "/ɪkˈskluːʒənəri/", meaning: "Mang tính loại trừ, khép kín, ngăn chặn tiếp cận.", synonyms: ["elitist", "restrictive", "closed"], antonyms: ["inclusive", "welcoming", "accessible"], source: "overtourism" },
+            { id: 57, word: "monopolize", type: "v", ipa: "/məˈnɒpəlaɪz/", meaning: "Độc chiếm, thu tóm toàn bộ thị trường/không gian.", synonyms: ["dominate", "corner", "control"], antonyms: ["share", "distribute", "divide"], source: "overtourism" },
+            { id: 58, word: "lucrative", type: "adj", ipa: "/ˈluːkrətɪv/", meaning: "Rất sinh lời, đẻ ra nhiều tiền lợi nhuận.", synonyms: ["profitable", "money-making"], antonyms: ["unprofitable", "loss-making"], source: "overtourism" },
+            { id: 59, word: "resentment", type: "n", ipa: "/rɪˈzentmənt/", meaning: "Sự uất hận, phẫn nộ tức tối vì bị đối xử bất công.", synonyms: ["bitterness", "anger", "indignation"], antonyms: ["satisfaction", "contentment", "gratitude"], source: "overtourism" },
+            { id: 60, word: "hollowed-out", type: "adj", ipa: "/ˌhɒləʊd ˈaʊt/", meaning: "Bị đục rỗng hoàn toàn, chỉ còn vỏ bọc hào nhoáng.", synonyms: ["emptied", "gutted", "eroded"], antonyms: ["solid", "reinforced", "brimming"], source: "overtourism" },
 
             // PICKLEBALL
-            { id: 61, word: "attire", type: "n", ipa: "/əˈtaɪə(r)/", meaning: "Trang phục, quần áo chỉnh tề hoặc trang trọng.", synonyms: ["clothing", "garments", "apparel"], source: "pickleball" },
-            { id: 62, word: "gear", type: "n", ipa: "/ɡɪə(r)/", meaning: "Trang thiết bị, đồ dùng chuyên dụng thể thao.", synonyms: ["equipment", "tackle", "apparatus"], source: "pickleball" },
-            { id: 63, word: "influx", type: "n", ipa: "/ˈɪnflʌks/", meaning: "Sự tràn vào ồ ạt của dòng người hoặc tiền bạc.", synonyms: ["arrival", "invasion", "inflow"], source: "pickleball" },
-            { id: 64, word: "craze", type: "n", ipa: "/kreɪz/", meaning: "Cơn sốt, mốt cuồng nhiệt nhất thời trong cộng đồng.", synonyms: ["fad", "trend", "mania"], source: "pickleball" },
-            { id: 65, word: "zeal", type: "n", ipa: "/ziːl/", meaning: "Sự hăng hái, nhiệt tâm lớn lao đối với hoạt động.", synonyms: ["enthusiasm", "passion", "fervor"], source: "pickleball" },
-            { id: 66, word: "novice", type: "n", ipa: "/ˈnɒvɪs/", meaning: "Người mới bắt đầu, chưa có kinh nghiệm thực chiến.", synonyms: ["beginner", "amateur", "learner"], source: "pickleball" },
-            { id: 67, word: "egalitarian", type: "adj", ipa: "/ɪˌɡælɪˈteəriən/", meaning: "Bình đẳng, theo chủ nghĩa đảm bảo quyền lợi chung.", synonyms: ["fair", "equal", "classless"], source: "pickleball" },
-            { id: 68, word: "awash", type: "adj", ipa: "/əˈwɒʃ/", meaning: "Tràn ngập hoàn toàn (nước ngập bề mặt, ngập thông tin).", synonyms: ["flooded", "teeming", "inundated"], source: "pickleball" },
-            { id: 69, word: "derision", type: "n", ipa: "/dɪˈrɪʒn/", meaning: "Sự nhạo báng, chế giễu bôi nhọ một cách khinh bỉ.", synonyms: ["mockery", "ridicule", "scorn"], source: "pickleball" },
-            { id: 70, word: "ostentatious", type: "adj", ipa: "/ˌɒstenˈteɪʃəs/", meaning: "Hào nhoáng, phô trương của cải để gây chú ý.", synonyms: ["showy", "flashy", "pretentious"], source: "pickleball" },
-            { id: 71, word: "encroachment", type: "n", ipa: "/ɪnˈkrəʊtʃmənt/", meaning: "Sự xâm lấn trái phép không gian, đất đai công cộng.", synonyms: ["intrusion", "invasion", "trespass"], source: "pickleball" },
-            { id: 72, word: "skepticism", type: "n", ipa: "/ˈskeptɪsɪzəm/", meaning: "Thái độ hoài nghi, ngờ vực (có tính chất nghiên cứu).", synonyms: ["doubt", "disbelief", "mistrust"], source: "pickleball" },
-            { id: 73, word: "sedentary", type: "adj", ipa: "/ˈsedntri/", meaning: "Ít vận động thể chất, tính chất công việc ngồi một chỗ.", synonyms: ["inactive", "stationary", "sluggish"], source: "pickleball" },
-            { id: 74, word: "detractors", type: "n", ipa: "/dɪˈtræktəz/", meaning: "Những người chuyên chỉ trích, gièm pha hạ thấp giá trị.", synonyms: ["critics", "cynics", "opponents"], source: "pickleball" },
-            { id: 75, word: "gaudy", type: "adj", ipa: "/ˈɡɔːdi/", meaning: "Lòe loẹt, phô trương quá mức, thiếu đi sự tinh tế.", synonyms: ["flashy", "ostentatious", "garish"], source: "pickleball" },
+            { id: 61, word: "attire", type: "n", ipa: "/əˈtaɪə(r)/", meaning: "Trang phục, quần áo chỉnh tề hoặc trang trọng.", synonyms: ["clothing", "garments", "apparel"], antonyms: ["nudity", "undress"], source: "pickleball" },
+            { id: 62, word: "gear", type: "n", ipa: "/ɡɪə(r)/", meaning: "Trang thiết bị, đồ dùng chuyên dụng thể thao.", synonyms: ["equipment", "tackle", "apparatus"], antonyms: ["junk", "rubbish"], source: "pickleball" },
+            { id: 63, word: "influx", type: "n", ipa: "/ˈɪnflʌks/", meaning: "Sự tràn vào ồ ạt của dòng người hoặc tiền bạc.", synonyms: ["arrival", "invasion", "inflow"], antonyms: ["outflow", "exodus", "drain"], source: "pickleball" },
+            { id: 64, word: "craze", type: "n", ipa: "/kreɪz/", meaning: "Cơn sốt, mốt cuồng nhiệt nhất thời trong cộng đồng.", synonyms: ["fad", "trend", "mania"], antonyms: ["standard", "tradition", "indifference"], source: "pickleball" },
+            { id: 65, word: "zeal", type: "n", ipa: "/ziːl/", meaning: "Sự hăng hái, nhiệt tâm lớn lao đối với hoạt động.", synonyms: ["enthusiasm", "passion", "fervor"], antonyms: ["apathy", "indifference", "lethargy"], source: "pickleball" },
+            { id: 66, word: "novice", type: "n", ipa: "/ˈnɒvɪs/", meaning: "Người mới bắt đầu, chưa có kinh nghiệm thực chiến.", synonyms: ["beginner", "amateur", "learner"], antonyms: ["expert", "veteran", "master"], source: "pickleball" },
+            { id: 67, word: "egalitarian", type: "adj", ipa: "/ɪˌɡælɪˈteəriən/", meaning: "Bình đẳng, theo chủ nghĩa đảm bảo quyền lợi chung.", synonyms: ["fair", "equal", "classless"], antonyms: ["elitist", "hierarchical", "snobbish"], source: "pickleball" },
+            { id: 68, word: "awash", type: "adj", ipa: "/əˈwɒʃ/", meaning: "Tràn ngập hoàn toàn (nước ngập bề mặt, ngập thông tin).", synonyms: ["flooded", "teeming", "inundated"], antonyms: ["dry", "barren", "scarce"], source: "pickleball" },
+            { id: 69, word: "derision", type: "n", ipa: "/dɪˈrɪʒn/", meaning: "Sự nhạo báng, chế giễu bôi nhọ một cách khinh bỉ.", synonyms: ["mockery", "ridicule", "scorn"], antonyms: ["praise", "admiration", "respect"], source: "pickleball" },
+            { id: 70, word: "ostentatious", type: "adj", ipa: "/ˌɒstenˈteɪʃəs/", meaning: "Hào nhoáng, phô trương của cải để gây chú ý.", synonyms: ["showy", "flashy", "pretentious"], antonyms: ["modest", "unpretentious", "subtle"], source: "pickleball" },
+            { id: 71, word: "encroachment", type: "n", ipa: "/ɪnˈkrəʊtʃmənt/", meaning: "Sự xâm lấn trái phép không gian, đất đai công cộng.", synonyms: ["intrusion", "invasion", "trespass"], antonyms: ["withdrawal", "retreat", "defense"], source: "pickleball" },
+            { id: 72, word: "skepticism", type: "n", ipa: "/ˈskeptɪsɪzəm/", meaning: "Thái độ hoài nghi, ngờ vực (có tính chất nghiên cứu).", synonyms: ["doubt", "disbelief", "mistrust"], antonyms: ["belief", "conviction", "credulity"], source: "pickleball" },
+            { id: 73, word: "sedentary", type: "adj", ipa: "/ˈsedntri/", meaning: "Ít vận động thể chất, tính chất công việc ngồi một chỗ.", synonyms: ["inactive", "stationary", "sluggish"], antonyms: ["active", "dynamic", "energetic"], source: "pickleball" },
+            { id: 74, word: "detractors", type: "n", ipa: "/dɪˈtræktəz/", meaning: "Những người chuyên chỉ trích, gièm pha hạ thấp giá trị.", synonyms: ["critics", "cynics", "opponents"], antonyms: ["supporters", "advocates", "allies"], source: "pickleball" },
+            { id: 75, word: "gaudy", type: "adj", ipa: "/ˈɡɔːdi/", meaning: "Lòe loẹt, phô trương quá mức, thiếu đi sự tinh tế.", synonyms: ["flashy", "ostentatious", "garish"], antonyms: ["elegant", "tasteful", "drab"], source: "pickleball" },
 
             // MULTIPLE MEANING (TỪ ĐA NGHĨA)
-            { id: 76, word: "capital", type: "n/adj", ipa: "/ˈkæp.ɪ.təl/", meaning: "1. Tiền vốn.\n2. Tội đáng tử hình.\n3. Xuất sắc, cực kỳ tốt.", synonyms: ["fund", "fatal", "excellent"], source: "multi" },
-            { id: 77, word: "champion", type: "n/v", ipa: "/ˈtʃæm.pi.ən/", meaning: "Người chiến đấu vì lý tưởng / Ủng hộ, bảo vệ (Championed).", synonyms: ["supporter", "advocate", "defend"], source: "multi" },
-            { id: 78, word: "contend", type: "v", ipa: "/kənˈtend/", meaning: "Cạnh tranh, đấu tranh. Khẳng định, quả quyết là đúng.", synonyms: ["fight", "grapple", "claim", "aver"], source: "multi" },
-            { id: 79, word: "asset", type: "n", ipa: "/ˈæs.et/", meaning: "Tài sản. Người/vật vô cùng hữu ích, có giá trị.", synonyms: ["property", "godsend", "advantage"], source: "multi" },
-            { id: 80, word: "sovereign", type: "adj", ipa: "/ˈsɒv.ər.ɪn/", meaning: "Tối cao. Độc lập hoàn toàn. Thuộc chính phủ (Sovereign fund).", synonyms: ["national", "autonomous", "independent"], source: "multi" },
-            { id: 81, word: "compact", type: "adj", ipa: "/ˈkɒm.pækt/", meaning: "Nhỏ gọn, gọn nhẹ. Cô đọng, súc tích (văn phong).", synonyms: ["concise", "dense", "portable"], source: "multi" },
-            { id: 82, word: "hollow", type: "adj", ipa: "/ˈhɒləʊ/", meaning: "Rỗng tuếch (vật thể). Sáo rỗng, vô nghĩa (lời hứa).", synonyms: ["empty", "insincere", "meaningless"], source: "multi" },
-            { id: 83, word: "rigorous", type: "adj", ipa: "/ˈrɪɡərəs/", meaning: "Nghiêm ngặt, chi tiết, tỉ mỉ. Khắc nghiệt, hà khắc.", synonyms: ["thorough", "meticulous", "stringent", "harsh"], source: "multi" },
-            { id: 84, word: "sheer", type: "adj", ipa: "/ʃɪə(r)/", meaning: "Hoàn toàn (kích thước lớn). Dốc đứng. Mỏng dính xuyên thấu.", synonyms: ["utter", "absolute", "precipitous", "transparent"], source: "multi" },
-            { id: 85, word: "mutate", type: "v", ipa: "/mjuːˈteɪt/", meaning: "Đột biến gen. Biến tướng sang dạng khác tồi tệ hơn.", synonyms: ["transform", "morph", "alter"], source: "multi" },
-            { id: 86, word: "prohibitive", type: "adj", ipa: "/prəˈhɪbətɪv/", meaning: "Quá đắt đỏ. Mang tính ngăn cấm. Nắm chắc phần thắng.", synonyms: ["exorbitant", "restrictive", "insurmountable"], source: "multi" },
-            { id: 87, word: "query", type: "n/v", ipa: "/ˈkwɪəri/", meaning: "Thắc mắc, chất vấn. Nghi vấn kiểm chứng sự thực.", synonyms: ["inquiry", "question", "doubt", "challenge"], source: "multi" },
-            { id: 88, word: "explicit", type: "adj", ipa: "/ɪkˈsplɪsɪt/", meaning: "Rõ ràng, dứt khoát không ẩn ý. Trần trụi, nhạy cảm (18+).", synonyms: ["clear", "overt", "unambiguous", "graphic"], source: "multi" },
-            { id: 89, word: "sentiment", type: "n", ipa: "/ˈsentɪmənt/", meaning: "Tâm lý đám đông, quan điểm xã hội. Tình cảm, sự đa cảm.", synonyms: ["attitude", "opinion", "feeling", "nostalgia"], source: "multi" },
-            { id: 90, word: "shallow", type: "adj", ipa: "/ˈʃæləʊ/", meaning: "Nông cạn. Hời hợt (tính cách). Thanh khoản kém. Lý lẽ lỏng lẻo.", synonyms: ["superficial", "low", "thin", "flimsy"], source: "multi" },
-            { id: 91, word: "essence", type: "n", ipa: "/ˈes.əns/", meaning: "Bản chất, cốt lõi giá trị. Tinh dầu, tinh chất đậm đặc.", synonyms: ["core", "heart", "extract", "essential oil"], source: "multi" },
-            { id: 92, word: "walk away", type: "v", ipa: "/wɔːk əˈweɪ/", meaning: "Bỏ đi không giải quyết. Sống sót sau tai nạn. Dễ dàng rinh giải.", synonyms: ["leave", "abandon", "survive", "win"], source: "multi" },
-            { id: 93, word: "speaking down to", type: "v", ipa: "/ˈspiːk.ɪŋ daʊn tuː/", meaning: "Nói giọng bề trên, lên mặt dạy đời khinh miệt.", synonyms: ["patronizing", "condescending to"], source: "multi" },
-            { id: 94, word: "aesthetic", type: "adj/n", ipa: "/iːsˈθet.ɪk/", meaning: "Thuộc về thẩm mỹ. Phong cách diện mạo đặc trưng.", synonyms: ["look", "style", "artistic"], source: "multi" },
+            { id: 76, word: "capital", type: "n/adj", ipa: "/ˈkæp.ɪ.təl/", meaning: "1. Tiền vốn.\n2. Tội đáng tử hình.\n3. Xuất sắc, cực kỳ tốt.", synonyms: ["fund", "fatal", "excellent"], antonyms: ["debt", "minor", "poor"], source: "multi" },
+            { id: 77, word: "champion", type: "n/v", ipa: "/ˈtʃæm.pi.ən/", meaning: "Người chiến đấu vì lý tưởng / Ủng hộ, bảo vệ (Championed).", synonyms: ["supporter", "advocate", "defend"], antonyms: ["opponent", "critic", "oppose"], source: "multi" },
+            { id: 78, word: "contend", type: "v", ipa: "/kənˈtend/", meaning: "Cạnh tranh, đấu tranh. Khẳng định, quả quyết là đúng.", synonyms: ["fight", "grapple", "claim"], antonyms: ["concede", "surrender", "deny"], source: "multi" },
+            { id: 79, word: "asset", type: "n", ipa: "/ˈæs.et/", meaning: "Tài sản. Người/vật vô cùng hữu ích, có giá trị.", synonyms: ["property", "godsend", "advantage"], antonyms: ["liability", "burden", "drawback"], source: "multi" },
+            { id: 80, word: "sovereign", type: "adj", ipa: "/ˈsɒv.ər.ɪn/", meaning: "Tối cao. Độc lập hoàn toàn. Thuộc chính phủ (Sovereign fund).", synonyms: ["national", "autonomous", "independent"], antonyms: ["subordinate", "dependent", "colony"], source: "multi" },
+            { id: 81, word: "compact", type: "adj", ipa: "/ˈkɒm.pækt/", meaning: "Nhỏ gọn, gọn nhẹ. Cô đọng, súc tích (văn phong).", synonyms: ["concise", "dense", "portable"], antonyms: ["bulky", "wordy", "scattered"], source: "multi" },
+            { id: 82, word: "hollow", type: "adj", ipa: "/ˈhɒləʊ/", meaning: "Rỗng tuếch (vật thể). Sáo rỗng, vô nghĩa (lời hứa).", synonyms: ["empty", "insincere", "meaningless"], antonyms: ["solid", "sincere", "profound"], source: "multi" },
+            { id: 83, word: "rigorous", type: "adj", ipa: "/ˈrɪɡərəs/", meaning: "Nghiêm ngặt, chi tiết, tỉ mỉ. Khắc nghiệt, hà khắc.", synonyms: ["thorough", "meticulous", "stringent"], antonyms: ["careless", "lax", "lenient"], source: "multi" },
+            { id: 84, word: "sheer", type: "adj", ipa: "/ʃɪə(r)/", meaning: "Hoàn toàn (kích thước lớn). Dốc đứng. Mỏng dính xuyên thấu.", synonyms: ["utter", "absolute", "precipitous"], antonyms: ["partial", "gradual", "opaque"], source: "multi" },
+            { id: 85, word: "mutate", type: "v", ipa: "/mjuːˈteɪt/", meaning: "Đột biến gen. Biến tướng sang dạng khác tồi tệ hơn.", synonyms: ["transform", "morph", "alter"], antonyms: ["stagnate", "remain", "persist"], source: "multi" },
+            { id: 86, word: "prohibitive", type: "adj", ipa: "/prəˈhɪbətɪv/", meaning: "Quá đắt đỏ. Mang tính ngăn cấm. Nắm chắc phần thắng.", synonyms: ["exorbitant", "restrictive", "insurmountable"], antonyms: ["affordable", "cheap", "permissive"], source: "multi" },
+            { id: 87, word: "query", type: "n/v", ipa: "/ˈkwɪəri/", meaning: "Thắc mắc, chất vấn. Nghi vấn kiểm chứng sự thực.", synonyms: ["inquiry", "question", "doubt"], antonyms: ["answer", "certainty", "accept"], source: "multi" },
+            { id: 88, word: "explicit", type: "adj", ipa: "/ɪkˈsplɪsɪt/", meaning: "Rõ ràng, dứt khoát không ẩn ý. Trần trụi, nhạy cảm (18+).", synonyms: ["clear", "overt", "unambiguous"], antonyms: ["implicit", "vague", "ambiguous"], source: "multi" },
+            { id: 89, word: "sentiment", type: "n", ipa: "/ˈsentɪmənt/", meaning: "Tâm lý đám đông, quan điểm xã hội. Tình cảm, sự đa cảm.", synonyms: ["attitude", "opinion", "feeling"], antonyms: ["indifference", "coldness", "fact"], source: "multi" },
+            { id: 90, word: "shallow", type: "adj", ipa: "/ˈʃæləʊ/", meaning: "Nông cạn. Hời hợt (tính cách). Thanh khoản kém. Lý lẽ lỏng lẻo.", synonyms: ["superficial", "low", "flimsy"], antonyms: ["deep", "profound", "thorough"], source: "multi" },
+            { id: 91, word: "essence", type: "n", ipa: "/ˈes.əns/", meaning: "Bản chất, cốt lõi giá trị. Tinh dầu, tinh chất đậm đặc.", synonyms: ["core", "heart", "extract"], antonyms: ["exterior", "facade", "periphery"], source: "multi" },
+            { id: 92, word: "walk away", type: "v", ipa: "/wɔːk əˈweɪ/", meaning: "Bỏ đi không giải quyết. Sống sót sau tai nạn. Dễ dàng rinh giải.", synonyms: ["leave", "abandon", "survive"], antonyms: ["stay", "confront", "perish"], source: "multi" },
+            { id: 93, word: "speaking down to", type: "v", ipa: "/ˈspiːk.ɪŋ daʊn tuː/", meaning: "Nói giọng bề trên, lên mặt dạy đời khinh miệt.", synonyms: ["patronizing", "condescending"], antonyms: ["respecting", "venerating", "honoring"], source: "multi" },
+            { id: 94, word: "aesthetic", type: "adj/n", ipa: "/iːsˈθet.ɪk/", meaning: "Thuộc về thẩm mỹ. Phong cách diện mạo đặc trưng.", synonyms: ["look", "style", "artistic"], antonyms: ["unattractive", "hideous", "grotesque"], source: "multi" },
 
             // BÀI ĐỌC (READING VOCAB)
-            { id: 95, word: "liberate", type: "v", ipa: "/ˈlɪb.ər.eɪt/", meaning: "Giải phóng, mở khóa (vốn đầu tư).", synonyms: ["free", "emancipate"], source: "reading" },
-            { id: 96, word: "bulk", type: "n", ipa: "/bʌlk/", meaning: "Phần lớn, đại bộ phận.", synonyms: ["majority", "preponderance"], source: "reading" },
-            { id: 97, word: "summit", type: "n", ipa: "/ˈsʌm.ɪt/", meaning: "Hội nghị thượng đỉnh, đỉnh cao nhất.", synonyms: ["meeting", "pinnacle"], source: "reading" },
-            { id: 98, word: "tense", type: "adj", ipa: "/tens/", meaning: "Căng thẳng, lo âu.", synonyms: ["anxious", "fraught"], source: "reading" },
-            { id: 99, word: "prolific", type: "adj", ipa: "/prəˈlɪf.ɪk/", meaning: "Nhiều, sản sinh quy mô lớn.", synonyms: ["abundant", "fecund"], source: "reading" },
-            { id: 100, word: "contravention", type: "n", ipa: "/ˌkɒn.trəˈven.ʃən/", meaning: "Sự vi phạm, sự làm trái luật.", synonyms: ["violation", "transgression"], source: "reading" },
-            { id: 101, word: "duplicity", type: "n", ipa: "/dʒuːˈplɪs.ə.ti/", meaning: "Sự dối trá, tính hai mặt.", synonyms: ["dishonesty", "chicanery"], source: "reading" },
-            { id: 102, word: "exigent", type: "adj", ipa: "/ˈek.sɪ.dʒənt/", meaning: "Cấp bách, khẩn thiết.", synonyms: ["urgent", "pressing"], source: "reading" },
-            { id: 103, word: "curtail", type: "v", ipa: "/kəˈteɪl/", meaning: "Cắt giảm, giảm bớt.", synonyms: ["reduce", "truncate"], source: "reading" },
-            { id: 104, word: "fiduciary", type: "adj", ipa: "/fɪˈdjuː.ʃər.i/", meaning: "Ủy thác, đáng tin cậy về tài chính.", synonyms: ["financial", "staunch"], source: "reading" },
-            { id: 105, word: "impeccable", type: "adj", ipa: "/ɪmˈpek.ə.bəl/", meaning: "Hoàn hảo, không tì vết.", synonyms: ["perfect", "flawless"], source: "reading" },
-            { id: 106, word: "virtuous", type: "adj", ipa: "/ˈvɜː.tʃu.əs/", meaning: "Đức hạnh, tích cực.", synonyms: ["moral", "righteous"], source: "reading" },
-            { id: 107, word: "colossal", type: "adj", ipa: "/kəˈlɒs.əl/", meaning: "Khổng lồ, cực kỳ to lớn.", synonyms: ["huge", "gargantuan"], source: "reading" },
-            { id: 108, word: "cutting-edge", type: "adj", ipa: "/ˌkʌt.ɪŋˈedʒ/", meaning: "Mũi nhọn, tiên tiến hiện đại nhất.", synonyms: ["state-of-the-art", "advanced"], source: "reading" },
-            { id: 109, word: "eradicate", type: "v", ipa: "/ɪˈræd.ɪ.keɪt/", meaning: "Loại bỏ hoàn toàn, diệt trừ tận gốc.", synonyms: ["eliminate", "wipe out"], source: "reading" },
-            { id: 110, word: "seamlessly", type: "adv", ipa: "/ˈsiːm.ləs.li/", meaning: "Mượt mà, trơn tru, không gián đoạn.", synonyms: ["smoothly", "flawlessly"], source: "reading" },
-            { id: 111, word: "relentless", type: "adj", ipa: "/rɪˈlent.ləs/", meaning: "Không ngừng nghỉ, tàn nhẫn gay gắt.", synonyms: ["continuous", "persistent", "harsh"], source: "reading" },
-            { id: 112, word: "onslaught", type: "n", ipa: "/ˈɒn.slɔːt/", meaning: "Sự tấn công dữ dội, công phá mạnh mẽ.", synonyms: ["assault", "attack", "blitz"], source: "reading" },
-       
-            // NEW ADVANCED WORDS ADDED TODAY (ID: 113 - 140)
-            { id: 113, word: "alias", type: "n", ipa: "/ˈeɪliəs/", meaning: "Bí danh, tên giả.\n~ pseudonym, incognito, false name\n# real name, legal name", synonyms: ["pseudonym", "incognito", "false name"], source: "multi" },
-            { id: 114, word: "regulator", type: "n", ipa: "/ˈreɡjuleɪtə(r)/", meaning: "Bộ điều chỉnh, cơ quan quản lý nhà nước.\n~ ombudsman, custodian, controller\n# deregulator, anarchist", synonyms: ["ombudsman", "custodian", "comptroller"], source: "multi" },
-            { id: 115, word: "insistently", type: "adv", ipa: "/ɪnˈsɪstəntli/", meaning: "Một cách khăng khăng, dồn dập quyết liệt.\n~ relentlessly, assertively, importunately\n# hesitantly, meekly", synonyms: ["relentlessly", "assertively", "persistently"], source: "multi" },
-            { id: 116, word: "unsolicited", type: "adj", ipa: "/ˌʌnsəˈlɪsɪtɪd/", meaning: "Không được yêu cầu, tự ý gửi, tự động đưa ra.\n~ unprompted, gratuitous, unbidden\n# solicited, requested", synonyms: ["unprompted", "gratuitous", "unbidden"], source: "reading" },
-            { id: 117, word: "spurious", type: "adj", ipa: "/ˈspjʊəriəs/", meaning: "Giả mạo, không xác thực, lừa mị.\n~ bogus, specious, apocryphal\n# authentic, genuine", synonyms: ["bogus", "specious", "apocryphal"], source: "reading" },
-            { id: 118, word: "bolster", type: "v", ipa: "/ˈbəʊlstə(r)/", meaning: "Củng cố, tăng cường, gia cố sức mạnh.\n~ fortify, reinforce, buttress\n# undermine, sabotage, debilitate", synonyms: ["fortify", "reinforce", "buttress"], source: "reading" },
-            { id: 119, word: "fabricated", type: "adj", ipa: "/ˈfæbrɪkeɪtɪd/", meaning: "Bị đặt, thêu dệt giả tạo.\n~ falsified, concocted, contrived\n# authenticated, verified", synonyms: ["falsified", "concocted", "contrived"], source: "reading" },
-            { id: 120, word: "endorsement", type: "n", ipa: "/ɪnˈdɔːsmənt/", meaning: "Sự chứng thực, sự tán dương, công khai ủng hộ.\n~ sanction, advocacy, encomium\n# condemnation, censure", synonyms: ["sanction", "advocacy", "encomium"], source: "reading" },
-            { id: 121, word: "veneer", type: "n", ipa: "/vəˈnɪə(r)/", meaning: "Vỏ bọc hào nhoáng bề ngoài nhằm che giấu bản chất.\n~ facade, semblance, guise\n# core, substance, quintessence", synonyms: ["facade", "semblance", "guise"], source: "multi" },
-            { id: 122, word: "legitimacy", type: "n", ipa: "/lɪˈdʒɪtəməsi/", meaning: "Tính hợp pháp, tính chính đáng, sự đúng đắn.\n~ validity, authenticity, rectitude\n# fraudulence, invalidity", synonyms: ["validity", "authenticity", "rectitude"], source: "reading" },
-            { id: 123, word: "duped", type: "v/adj", ipa: "/djuːpt/", meaning: "Bị lừa gạt, bị mắc bợm che mắt.\n~ deceived, hoodwinked, bamboozled\n# enlightened, astute", synonyms: ["hoodwinked", "bamboozled", "beguiled"], source: "reading" },
-            { id: 124, word: "discernible", type: "adj", ipa: "/dɪˈsɜːnəbl/", meaning: "Có thể nhận thấy rõ ràng, hiển nhiên.\n~ perceptible, detectable, manifest\n# imperceptible, invisible", synonyms: ["perceptible", "detectable", "manifest"], source: "reading" },
-            { id: 125, word: "flogged", type: "v", ipa: "/flɒɡd/", meaning: "Bán tháo, chèo kéo khách hàng, rao bán rong.\n~ peddled, hawked, purveyed\n# purchased, hoarded", synonyms: ["peddled", "hawked", "purveyed"], source: "multi" },
-            { id: 126, word: "watchdog", type: "n", ipa: "/ˈwɒtʃdɒɡ/", meaning: "Cơ quan, tổ chức giám sát độc lập.\n~ ombudsman, sentinel, custodian\n# perpetrator, transgressor", synonyms: ["ombudsman", "sentinel", "custodian"], source: "multi" },
-            { id: 127, word: "forensic", type: "adj", ipa: "/fəˈrenzɪk/", meaning: "Thuộc điều tra pháp lý, tòa án, tranh luận biện bác.\n~ investigative, analytical, juridical\n# casual, superficial", synonyms: ["investigative", "analytical", "juridical"], source: "reading" },
-            { id: 128, word: "shoddy", type: "adj", ipa: "/ˈʃɒdi/", meaning: "Cẩu thả, kém chất lượng, tồi tàn.\n~ inferior, slipshod, deplorable\n# premium, meticulous, impeccable", synonyms: ["slipshod", "deplorable", "derelict"], source: "reading" },
-            { id: 129, word: "precipitate", type: "v", ipa: "/prɪˈsɪpɪteɪt/", meaning: "Gây ra mau chóng, kích động đẩy nhanh tiến độ.\n~ instigate, accelerate, expedite\n# decelerate, hinder, forestall", synonyms: ["instigate", "accelerate", "expedite"], source: "reading" },
-            { id: 130, word: "ineffectual", type: "adj", ipa: "/ˌɪnɪˈfektʃuəl/", meaning: "Không hiệu quả, bất lực, thiếu uy quyền.\n~ futile, inadequate, toothless\n# efficacious, potent", synonyms: ["futile", "inadequate", "toothless"], source: "reading" },
-            { id: 131, word: "pretext", type: "n", ipa: "/ˈpriːtekst/", meaning: "Cái cớ, lý do giả vờ để lách luật hoặc ngụy trang.\n~ guise, ploy, subterfuge\n# truth, reality, candor", synonyms: ["guise", "ploy", "subterfuge"], source: "multi" },
-            { id: 132, word: "ruse", type: "n", ipa: "/ruːz/", meaning: "Mưu mẹo, mánh khóe tinh khôn quỷ quyệt.\n~ stratagem, ploy, artifice\n# candor, sincerity, probity", synonyms: ["stratagem", "ploy", "artifice"], source: "multi" },
-            { id: 133, word: "perpetrating", type: "v", ipa: "/ˈpɜːpətreɪtɪŋ/", meaning: "Phạm tội, tiến hành phá hoại, hành vi xấu.\n~ committing, executing, wreaking\n# preventing, obstructing", synonyms: ["committing", "executing", "wreaking"], source: "reading" },
-            { id: 134, word: "disregard", type: "v", ipa: "/ˌdɪsrɪˈɡɑːd/", meaning: "Phớt lờ, coi thường, công khai vi phạm.\n~ dismiss, flout, ignore\n# heed, revere, venerate", synonyms: ["dismiss", "flout", "ignore"], source: "multi" },
-            { id: 135, word: "prudent", type: "adj", ipa: "/ˈpruːdnt/", meaning: "Thận trọng, khôn ngoan, sáng suốt nhìn trước ngó sau.\n~ judicious, sagacious, circumspect\n# reckless, impetuous", synonyms: ["judicious", "sagacious", "circumspect"], source: "reading" },
-            { id: 136, word: "insulation", type: "n", ipa: "/ˌɪnsjuˈleɪʃn/", meaning: "Vật liệu cách nhiệt, sự cô lập cách ly hoàn toàn.\n~ isolation, segregation, sequestration\n# conduction, exposure", synonyms: ["isolation", "segregation", "sequestration"], source: "multi" },
-            { id: 137, word: "thermostat", type: "n", ipa: "/ˈθɜːməstæt/", meaning: "Bộ điều chỉnh nhiệt độ, van cảm biến nhiệt.\n~ heat regulator, temperature controller\n# disruptor, destabilizer", synonyms: ["heat regulator", "temperature controller"], source: "multi" },
-            { id: 138, word: "fraudulent", type: "adj", ipa: "/ˈfrɔːdjələnt/", meaning: "Gian lận, lừa đảo, bất chính vô đạo đức.\n~ deceitful, duplicitous, nefarious\n# legitimate, scrupulous, veracious", synonyms: ["deceitful", "duplicitous", "nefarious"], source: "reading" },
-            { id: 139, word: "fabricate", type: "v", ipa: "/ˈfæbrɪkeɪt/", meaning: "Chế tạo, sản xuất hàng loạt / Đúc, rèn tạo hình.\n~ manufacture, industrialize, mass-produce\n# dismantle, destroy", synonyms: ["manufacture", "mass-produce", "forge"], source: "multi" },
-            { id: 140, word: "workmanship", type: "n", ipa: "/ˈwɜːkmənʃɪp/", meaning: "Tay nghề, tài nghệ, độ tinh xảo của sản phẩm.\n~ craftsmanship, expertise, virtuosity\n# incompetence, bumbling, maladroit", synonyms: ["craftsmanship", "expertise", "virtuosity"], source: "multi" }
+            { id: 95, word: "liberate", type: "v", ipa: "/ˈlɪb.ər.eɪt/", meaning: "Giải phóng, mở khóa (vốn đầu tư).", synonyms: ["free", "emancipate"], antonyms: ["imprison", "enslave", "restrict"], source: "reading" },
+            { id: 96, word: "bulk", type: "n", ipa: "/bʌlk/", meaning: "Phần lớn, đại bộ phận.", synonyms: ["majority", "preponderance"], antonyms: ["minority", "handful", "smidgen"], source: "reading" },
+            { id: 97, word: "summit", type: "n", ipa: "/ˈsʌm.ɪt/", meaning: "Hội nghị thượng đỉnh, đỉnh cao nhất.", synonyms: ["meeting", "pinnacle"], antonyms: ["base", "bottom", "nadir"], source: "reading" },
+            { id: 98, word: "tense", type: "adj", ipa: "/tens/", meaning: "Căng thẳng, lo âu.", synonyms: ["anxious", "fraught"], antonyms: ["relaxed", "calm", "serene"], source: "reading" },
+            { id: 99, word: "prolific", type: "adj", ipa: "/prəˈlɪf.ɪk/", meaning: "Nhiều, sản sinh quy mô lớn.", synonyms: ["abundant", "fecund"], antonyms: ["barren", "sterile", "unproductive"], source: "reading" },
+            { id: 100, word: "contravention", type: "n", ipa: "/ˌkɒn.trəˈven.ʃən/", meaning: "Sự vi phạm, sự làm trái luật.", synonyms: ["violation", "transgression"], antonyms: ["compliance", "observance", "adherence"], source: "reading" },
+            { id: 101, word: "duplicity", type: "n", ipa: "/dʒuːˈplɪs.ə.ti/", meaning: "Sự dối trá, tính hai mặt.", synonyms: ["dishonesty", "chicanery"], antonyms: ["honesty", "sincerity", "integrity"], source: "reading" },
+            { id: 102, word: "exigent", type: "adj", ipa: "/ˈek.sɪ.dʒənt/", meaning: "Cấp bách, khẩn thiết.", synonyms: ["urgent", "pressing"], antonyms: ["trivial", "ordinary", "facile"], source: "reading" },
+            { id: 103, word: "curtail", type: "v", ipa: "/kəˈteɪl/", meaning: "Cắt giảm, giảm bớt.", synonyms: ["reduce", "truncate"], antonyms: ["extend", "prolong", "expand"], source: "reading" },
+            { id: 104, word: "fiduciary", type: "adj", ipa: "/fɪˈdjuː.ʃər.i/", meaning: "Ủy thác, đáng tin cậy về tài chính.", synonyms: ["financial", "staunch"], antonyms: ["untrustworthy", "unethical"], source: "reading" },
+            { id: 105, word: "impeccable", type: "adj", ipa: "/ɪmˈpek.ə.bəl/", meaning: "Hoàn hảo, không tì vết.", synonyms: ["perfect", "flawless"], antonyms: ["flawed", "imperfect", "defective"], source: "reading" },
+            { id: 106, word: "virtuous", type: "adj", ipa: "/ˈvɜː.tʃu.əs/", meaning: "Đức hạnh, tích cực.", synonyms: ["moral", "righteous"], antonyms: ["wicked", "sinful", "corrupt"], source: "reading" },
+            { id: 107, word: "colossal", type: "adj", ipa: "/kəˈlɒs.əl/", meaning: "Khổng lồ, cực kỳ to lớn.", synonyms: ["huge", "gargantuan"], antonyms: ["tiny", "minuscule", "microscopic"], source: "reading" },
+            { id: 108, word: "cutting-edge", type: "adj", ipa: "/ˌkʌt.ɪŋˈedʒ/", meaning: "Mũi nhọn, tiên tiến hiện đại nhất.", synonyms: ["state-of-the-art", "advanced"], antonyms: ["obsolete", "outdated", "antiquated"], source: "reading" },
+            { id: 109, word: "eradicate", type: "v", ipa: "/ɪˈræd.ɪ.keɪt/", meaning: "Loại bỏ hoàn toàn, diệt trừ tận gốc.", synonyms: ["eliminate", "wipe out"], antonyms: ["create", "foster", "propagate"], source: "reading" },
+            { id: 110, word: "seamlessly", type: "adv", ipa: "/ˈsiːm.ləs.li/", meaning: "Mượt mà, trơn tru, không gián đoạn.", synonyms: ["smoothly", "flawlessly"], antonyms: ["clumsily", "disruptively", "roughly"], source: "reading" },
+            { id: 111, word: "relentless", type: "adj", ipa: "/rɪˈlent.ləs/", meaning: "Không ngừng nghỉ, tàn nhẫn gay gắt.", synonyms: ["continuous", "persistent"], antonyms: ["intermittent", "yielding", "lenient"], source: "reading" },
+            { id: 112, word: "onslaught", type: "n", ipa: "/ˈɒn.slɔːt/", meaning: "Sự tấn công dữ dội, công phá mạnh mẽ.", synonyms: ["assault", "attack", "blitz"], antonyms: ["defense", "retreat", "shield"], source: "reading" },
+
+            // NEW ADVANCED WORDS
+            { id: 113, word: "alias", type: "n", ipa: "/ˈeɪliəs/", meaning: "Bí danh, tên giả.", synonyms: ["pseudonym", "incognito", "false name"], antonyms: ["real name", "legal name"], source: "multi" },
+            { id: 114, word: "regulator", type: "n", ipa: "/ˈreɡjuleɪtə(r)/", meaning: "Bộ điều chỉnh, cơ quan quản lý nhà nước.", synonyms: ["ombudsman", "custodian", "controller"], antonyms: ["deregulator", "anarchist"], source: "multi" },
+            { id: 115, word: "insistently", type: "adv", ipa: "/ɪnˈsɪstəntli/", meaning: "Một cách khăng khăng, dồn dập quyết liệt.", synonyms: ["relentlessly", "assertively", "persistently"], antonyms: ["hesitantly", "meekly", "reluctantly"], source: "multi" },
+            { id: 116, word: "unsolicited", type: "adj", ipa: "/ˌʌnsəˈlɪsɪtɪd/", meaning: "Không được yêu cầu, tự ý gửi, tự động đưa ra.", synonyms: ["unprompted", "gratuitous", "unbidden"], antonyms: ["solicited", "requested", "invited"], source: "reading" },
+            { id: 117, word: "spurious", type: "adj", ipa: "/ˈspjʊəriəs/", meaning: "Giả mạo, không xác thực, lừa mị.", synonyms: ["bogus", "specious", "apocryphal"], antonyms: ["authentic", "genuine", "valid"], source: "reading" },
+            { id: 118, word: "bolster", type: "v", ipa: "/ˈbəʊlstə(r)/", meaning: "Củng cố, tăng cường, gia cố sức mạnh.", synonyms: ["fortify", "reinforce", "buttress"], antonyms: ["undermine", "sabotage", "debilitate"], source: "reading" },
+            { id: 119, word: "fabricated", type: "adj", ipa: "/ˈfæbrɪkeɪtɪd/", meaning: "Bị đặt, thêu dệt giả tạo.", synonyms: ["falsified", "concocted", "contrived"], antonyms: ["authenticated", "verified", "true"], source: "reading" },
+            { id: 120, word: "endorsement", type: "n", ipa: "/ɪnˈdɔːsmənt/", meaning: "Sự chứng thực, sự tán dương, công khai ủng hộ.", synonyms: ["sanction", "advocacy", "encomium"], antonyms: ["condemnation", "censure", "disapproval"], source: "reading" },
+            { id: 121, word: "veneer", type: "n", ipa: "/vəˈnɪə(r)/", meaning: "Vỏ bọc hào nhoáng bề ngoài nhằm che giấu bản chất.", synonyms: ["facade", "semblance", "guise"], antonyms: ["core", "substance", "reality"], source: "multi" },
+            { id: 122, word: "legitimacy", type: "n", ipa: "/lɪˈdʒɪtəməsi/", meaning: "Tính hợp pháp, tính chính đáng, sự đúng đắn.", synonyms: ["validity", "authenticity", "rectitude"], antonyms: ["fraudulence", "invalidity", "illegality"], source: "reading" },
+            { id: 123, word: "duped", type: "v/adj", ipa: "/djuːpt/", meaning: "Bị lừa gạt, bị mắc bợm che mắt.", synonyms: ["hoodwinked", "bamboozled", "deceived"], antonyms: ["enlightened", "astute", "undeceived"], source: "reading" },
+            { id: 124, word: "discernible", type: "adj", ipa: "/dɪˈsɜːnəbl/", meaning: "Có thể nhận thấy rõ ràng, hiển nhiên.", synonyms: ["perceptible", "detectable", "manifest"], antonyms: ["imperceptible", "invisible", "obscure"], source: "reading" },
+            { id: 125, word: "flogged", type: "v", ipa: "/flɒɡd/", meaning: "Bán tháo, chèo kéo khách hàng, rao bán rong.", synonyms: ["peddled", "hawked", "purveyed"], antonyms: ["purchased", "hoarded", "bought"], source: "multi" },
+            { id: 126, word: "watchdog", type: "n", ipa: "/ˈwɒtʃdɒɡ/", meaning: "Cơ quan, tổ chức giám sát độc lập.", synonyms: ["ombudsman", "sentinel", "custodian"], antonyms: ["perpetrator", "transgressor", "suspect"], source: "multi" },
+            { id: 127, word: "forensic", type: "adj", ipa: "/fəˈrenzɪk/", meaning: "Thuộc điều tra pháp lý, tòa án, tranh luận biện bác.", synonyms: ["investigative", "analytical", "juridical"], antonyms: ["casual", "superficial", "unscientific"], source: "reading" },
+            { id: 128, word: "shoddy", type: "adj", ipa: "/ˈʃɒdi/", meaning: "Cẩu thả, kém chất lượng, tồi tàn.", synonyms: ["slipshod", "deplorable", "inferior"], antonyms: ["premium", "meticulous", "impeccable"], source: "reading" },
+            { id: 129, word: "precipitate", type: "v", ipa: "/prɪˈsɪpɪteɪt/", meaning: "Gây ra mau chóng, kích động đẩy nhanh tiến độ.", synonyms: ["instigate", "accelerate", "expedite"], antonyms: ["decelerate", "hinder", "forestall"], source: "reading" },
+            { id: 130, word: "ineffectual", type: "adj", ipa: "/ˌɪnɪˈfektʃuəl/", meaning: "Không hiệu quả, bất lực, thiếu uy quyền.", synonyms: ["futile", "inadequate", "toothless"], antonyms: ["efficacious", "potent", "powerful"], source: "reading" },
+            { id: 131, word: "pretext", type: "n", ipa: "/ˈpriːtekst/", meaning: "Cái cớ, lý do giả vờ để lách luật hoặc ngụy trang.", synonyms: ["guise", "ploy", "subterfuge"], antonyms: ["truth", "reality", "candor"], source: "multi" },
+            { id: 132, word: "ruse", type: "n", ipa: "/ruːz/", meaning: "Mưu mẹo, mánh khóe tinh khôn quỷ quyệt.", synonyms: ["stratagem", "ploy", "artifice"], antonyms: ["candor", "sincerity", "probity"], source: "multi" },
+            { id: 133, word: "perpetrating", type: "v", ipa: "/ˈpɜːpətreɪtɪŋ/", meaning: "Phạm tội, tiến hành phá hoại, hành vi xấu.", synonyms: ["committing", "executing", "wreaking"], antonyms: ["preventing", "obstructing", "halting"], source: "reading" },
+            { id: 134, word: "disregard", type: "v", ipa: "/ˌdɪsrɪˈɡɑːd/", meaning: "Phớt lờ, coi thường, công khai vi phạm.", synonyms: ["dismiss", "flout", "ignore"], antonyms: ["heed", "revere", "venerate"], source: "multi" },
+            { id: 135, word: "prudent", type: "adj", ipa: "/ˈpruːdnt/", meaning: "Thận trọng, khôn ngoan, sáng suốt nhìn trước ngó sau.", synonyms: ["judicious", "sagacious", "circumspect"], antonyms: ["reckless", "impetuous", "incautious"], source: "reading" },
+            { id: 136, word: "insulation", type: "n", ipa: "/ˌɪnsjuˈleɪʃn/", meaning: "Vật liệu cách nhiệt, sự cô lập cách ly hoàn toàn.", synonyms: ["isolation", "segregation", "sequestration"], antonyms: ["conduction", "exposure", "connection"], source: "multi" },
+            { id: 137, word: "thermostat", type: "n", ipa: "/ˈθɜːməstæt/", meaning: "Bộ điều chỉnh nhiệt độ, van cảm biến nhiệt.", synonyms: ["heat regulator", "temperature controller"], antonyms: ["disruptor", "destabilizer"], source: "multi" },
+            { id: 138, word: "fraudulent", type: "adj", ipa: "/ˈfrɔːdjələnt/", meaning: "Gian lận, lừa đảo, bất chính vô đạo đức.", synonyms: ["deceitful", "duplicitous", "nefarious"], antonyms: ["legitimate", "scrupulous", "veracious"], source: "reading" },
+            { id: 139, word: "fabricate", type: "v", ipa: "/ˈfæbrɪkeɪt/", meaning: "Chế tạo, sản xuất hàng loạt / Đúc, rèn tạo hình.", synonyms: ["manufacture", "mass-produce", "forge"], antonyms: ["dismantle", "destroy", "demolish"], source: "multi" },
+            { id: 140, word: "workmanship", type: "n", ipa: "/ˈwɜːkmənʃɪp/", meaning: "Tay nghề, tài nghệ, độ tinh xảo của sản phẩm.", synonyms: ["craftsmanship", "expertise", "virtuosity"], antonyms: ["incompetence", "bumbling", "maladroit"], source: "multi" }
         ];
 
         // Khởi tạo hệ thống trạng thái (Local Storage)
@@ -315,7 +324,7 @@
         let filteredWords = [...vocabularyData];
         let currentIndex = 0;
         let isFlipped = false;
-        let viewMode = 'card'; // 'card' hoặc 'list'
+        let viewMode = 'card'; 
 
         // Trỏ DOM Elements
         const flashcardContainer = document.getElementById('flashcard-container');
@@ -325,6 +334,7 @@
         const cardIpa = document.getElementById('card-ipa');
         const cardMeaning = document.getElementById('card-meaning');
         const cardSynonyms = document.getElementById('card-synonyms');
+        const cardAntonyms = document.getElementById('card-antonyms');
         const cardIndex = document.getElementById('card-index');
         
         const prevBtn = document.getElementById('prev-btn');
@@ -363,19 +373,16 @@
             unlearnedBtn.addEventListener('click', markAsUnlearned);
             resetBtn.addEventListener('click', resetProgress);
             
-            // Đổi danh mục
             filterTabs.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => applyFilter(e.currentTarget.getAttribute('data-filter')));
             });
 
-            // Đổi View
             viewModeCard.addEventListener('click', () => toggleView('card'));
             viewModeList.addEventListener('click', () => toggleView('list'));
             searchInput.addEventListener('input', buildListView);
             document.addEventListener('keydown', handleGlobalKey);
         }
 
-        // Cập nhật số liệu hiển thị
         function updateStats() {
             masteredCountEl.textContent = masteredIds.length;
             totalCountEl.textContent = vocabularyData.length;
@@ -388,7 +395,6 @@
             document.getElementById('count-reading').textContent = vocabularyData.filter(w => w.source === 'reading').length;
         }
 
-        // Lọc dữ liệu theo tab
         function applyFilter(filter) {
             currentFilter = filter;
             filterTabs.querySelectorAll('.filter-btn').forEach(btn => {
@@ -408,11 +414,10 @@
             buildListView();
         }
 
-        // Đổ dữ liệu vào Flashcard
         function updateCard() {
             if (filteredWords.length === 0) {
                 cardWord.textContent = "Hoàn thành!"; cardIpa.textContent = "";
-                cardMeaning.textContent = "Bạn đã thuộc hết từ ở mục này."; cardSynonyms.innerHTML = "";
+                cardMeaning.textContent = "Bạn đã thuộc hết từ ở mục này."; cardSynonyms.innerHTML = ""; cardAntonyms.innerHTML = "";
                 cardIndex.textContent = "0 / 0"; cardTag.textContent = "-"; return;
             }
             const active = filteredWords[currentIndex];
@@ -431,24 +436,36 @@
             const favBtn = document.querySelector('.favorite-btn');
             favBtn.innerHTML = `<i data-lucide="star" class="w-5 h-5 ${masteredIds.includes(active.id) ? 'text-amber-500 fill-amber-400' : 'text-slate-300'}"></i>`;
 
+            // Đồng nghĩa
             cardSynonyms.innerHTML = '';
             active.synonyms.forEach(syn => {
                 const b = document.createElement('span');
-                b.className = "px-2 py-0.5 text-xs bg-slate-800 text-cyan-300 border border-slate-700 rounded font-mono font-medium";
+                b.className = "px-1.5 py-0.5 text-[11px] bg-slate-800 text-cyan-300 border border-slate-700 rounded font-mono";
                 b.textContent = syn; cardSynonyms.appendChild(b);
             });
+
+            // Trái nghĩa
+            cardAntonyms.innerHTML = '';
+            if (active.antonyms && active.antonyms.length > 0) {
+                active.antonyms.forEach(ant => {
+                    const b = document.createElement('span');
+                    b.className = "px-1.5 py-0.5 text-[11px] bg-slate-800 text-rose-300 border border-slate-700 rounded font-mono";
+                    b.textContent = ant; cardAntonyms.appendChild(b);
+                });
+            } else {
+                cardAntonyms.innerHTML = `<span class="text-xs text-slate-500 italic">Không có</span>`;
+            }
+
             cardIndex.textContent = `${currentIndex + 1} / ${filteredWords.length}`;
             lucide.createIcons();
         }
 
-        // Đọc phát âm tiếng Anh
         window.playPronunciation = function() {
             if (filteredWords.length === 0) return;
             const u = new SpeechSynthesisUtterance(filteredWords[currentIndex].word);
             u.lang = 'en-US'; u.rate = 0.85; window.speechSynthesis.speak(u);
         }
 
-        // Đánh dấu đã thuộc
         function markAsMastered() {
             if (filteredWords.length === 0) return;
             const id = filteredWords[currentIndex].id;
@@ -458,7 +475,6 @@
             }
         }
 
-        // Bỏ đánh dấu
         function markAsUnlearned() {
             if (filteredWords.length === 0) return;
             const id = filteredWords[currentIndex].id;
@@ -467,7 +483,6 @@
             updateStats(); buildListView(); updateCard();
         }
 
-        // Hiển thị thông báo góc
         function showNextPopup(msg) {
             const div = document.createElement('div');
             div.className = "fixed bottom-6 right-6 bg-emerald-50 text-emerald-800 border border-emerald-200 px-4 py-3 rounded-xl shadow-lg text-sm transition-all z-50 flex items-center gap-2";
@@ -477,15 +492,13 @@
             nextBtn.click();
         }
 
-        // Đặt lại từ đầu
         function resetProgress() {
-            if(confirm("Xác nhận reset lại toàn bộ tiến độ học tập? (Toàn bộ từ đã thuộc sẽ về 0)")) {
+            if(confirm("Xác nhận reset lại toàn bộ tiến độ học tập?")) {
                 masteredIds = []; localStorage.removeItem('megaMasteredVocab_Unified');
                 updateStats(); applyFilter(currentFilter);
             }
         }
 
-        // Chuyển Mode (Card / List)
         function toggleView(mode) {
             viewMode = mode;
             if(mode === 'card') {
@@ -498,7 +511,6 @@
             }
         }
 
-        // Sinh bảng danh sách từ vựng
         function buildListView() {
             listTableBody.innerHTML = '';
             const q = searchInput.value.toLowerCase().trim();
@@ -509,13 +521,20 @@
                 const isM = masteredIds.includes(item.id);
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50/50 transition-colors";
+                
+                const synBadges = item.synonyms.map(s=>`<span class="inline-block px-1.5 py-0.5 text-xs bg-cyan-50 text-cyan-800 rounded border border-cyan-100 mr-1 mb-1 font-mono">${s}</span>`).join('');
+                const antBadges = item.antonyms && item.antonyms.length > 0 
+                    ? item.antonyms.map(a=>`<span class="inline-block px-1.5 py-0.5 text-xs bg-rose-50 text-rose-800 rounded border border-rose-100 mr-1 mb-1 font-mono">${a}</span>`).join('')
+                    : `<span class="text-xs text-slate-400 italic">_</span>`;
+
                 tr.innerHTML = `
                     <td class="p-4 align-top font-mono font-bold text-slate-900">${item.word}
                         <button onclick="playAudioText('${item.word}')" class="ml-1 text-slate-400 hover:text-indigo-600"><i data-lucide="volume-2" class="w-3.5 h-3.5 inline"></i></button>
                         <div class="text-xs text-slate-500 font-normal mt-0.5">${item.type} • ${item.ipa}</div>
                     </td>
                     <td class="p-4 align-top leading-relaxed text-slate-600 whitespace-pre-line">${item.meaning}</td>
-                    <td class="p-4 align-top">${item.synonyms.map(s=>`<span class="inline-block px-1.5 py-0.5 text-xs bg-slate-100 text-slate-700 rounded mr-1 mb-1 font-mono">${s}</span>`).join('')}</td>
+                    <td class="p-4 align-top">${synBadges}</td>
+                    <td class="p-4 align-top">${antBadges}</td>
                     <td class="p-4 align-top text-right"><button onclick="toggleListId(${item.id})" class="text-xs px-2.5 py-1.5 rounded-full border font-bold transition-all ${isM?'bg-emerald-50 text-emerald-700 border-emerald-200':'bg-slate-100 text-slate-600'}">${isM?'Đã thuộc':'Chưa thuộc'}</button></td>
                 `;
                 listTableBody.appendChild(tr);
@@ -532,7 +551,6 @@
             updateStats(); buildListView(); updateCard();
         }
 
-        // Bàn phím điều hướng
         function handleGlobalKey(e) {
             if(viewMode !== 'card' || document.activeElement.tagName === 'INPUT') return;
             if(e.code === 'Space') { e.preventDefault(); isFlipped = !isFlipped; flashcardInner.classList.toggle('rotate-y-180', isFlipped); }
