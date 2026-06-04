@@ -465,6 +465,7 @@
             document.getElementById('count-ai').textContent = vocabularyData.filter(w => w.source === 'ai').length;
             document.getElementById('count-multi').textContent = vocabularyData.filter(w => w.source === 'multi').length;
             document.getElementById('count-reading').textContent = vocabularyData.filter(w => w.source === 'reading').length;
+            document.getElementById('count-newreading').textContent = vocabularyData.filter(w => w.source === 'newreading').length
         }
 
         function applyFilter(filter) {
